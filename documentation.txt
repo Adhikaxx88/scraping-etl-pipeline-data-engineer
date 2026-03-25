@@ -1,3 +1,16 @@
+# Membuat environment 
+python -m venv .env
+
+# Aktifkan virtual environment:
+# Untuk Windows (PowerShell):
+.\.env\Scripts\Activate.ps1
+# Untuk macOS/Linux:
+source .env/bin/activate
+
+# Install semua library
+pip install -r requirements.txt
+
+
 # Cara menjalankan skrip ETL pipeline
 python main.py
 

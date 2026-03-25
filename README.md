@@ -16,3 +16,27 @@ This project acts as a competitive intelligence tool for a fashion retail compan
 * **Libraries**: Requests, BeautifulSoup4, Pandas, SQLAlchemy, Gspread
 * **Storage**: PostgreSQL, Google Sheets, Flat File (CSV)
 * **Testing**: Pytest, Pytest-cov
+## Membuat environment 
+python -m venv .env
+
+## Aktifkan virtual environment:
+## Untuk Windows (PowerShell):
+.\.env\Scripts\Activate.ps1
+## Untuk macOS/Linux:
+source .env/bin/activate
+
+## Install semua library
+pip install -r requirements.txt
+
+
+## Cara menjalankan skrip ETL pipeline
+python main.py
+
+## Cara menjalankan unit test pada folder tests
+python -m pytest tests/
+
+## Cara menjalankan test coverage pada folder tests
+python -m pytest --cov=utils tests/
+
+## URL Google Sheets:
+https://docs.google.com/spreadsheets/d/1iiJi0Vd_LBM06XD7VzsKgvEuBDaFrK9xhRIWQPItKQQ/edit?usp=sharing
