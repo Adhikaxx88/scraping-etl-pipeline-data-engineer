@@ -80,7 +80,7 @@ def load_to_postgres(df):
     try:
 
         
-        # Bikin koneksi
+   
         url = f"postgresql://{config['user']}:{config['pw']}@{config['host']}:{config['port']}/{config['db']}"
         engine = create_engine(url)
         

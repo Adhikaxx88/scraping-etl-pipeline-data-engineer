@@ -5,7 +5,7 @@ from datetime import datetime
 import time
 
 def scraping(page_number):
-    # Format URL sesuai spek Dicoding (biasanya halaman 1 itu index)
+
     if page_number == 1:
         url = "https://fashion-studio.dicoding.dev/index.html"
     else:
@@ -18,7 +18,7 @@ def scraping(page_number):
         soup = BeautifulSoup(response.text, 'html.parser')
         products = []
         
-        # SESUAI GAMBAR: Tiap produk ada di dalam div class 'collection-card'
+  
         items = soup.find_all('div', class_='collection-card')
         
         for item in items:
@@ -62,4 +62,4 @@ def extract_main():
     return df
 if __name__ == "__main__":
     df_mentah = extract_main()
-    print(df_mentah.head()) # Buat liat 5 data teratas
+    print(df_mentah.head()) 

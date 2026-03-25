@@ -16,18 +16,3 @@ This project acts as a competitive intelligence tool for a fashion retail compan
 * **Libraries**: Requests, BeautifulSoup4, Pandas, SQLAlchemy, Gspread
 * **Storage**: PostgreSQL, Google Sheets, Flat File (CSV)
 * **Testing**: Pytest, Pytest-cov
-
-## 🏗️ Architecture Diagram
-
-
-## 📂 Project Structure
-```text
-submission-pemda/
-├── tests/              # Unit testing scripts
-├── utils/
-│   ├── extract.py      # Web Scraping logic
-│   ├── transform.py    # Data cleaning & transformation
-│   └── load.py         # Multi-repository loading logic
-├── main.py             # Pipeline entry point
-├── requirements.txt    # Project dependencies
-└── credentials.json    # Google Service Account (Hidden via .gitignore)
