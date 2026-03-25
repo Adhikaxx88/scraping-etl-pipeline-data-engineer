@@ -1,42 +1,51 @@
 import pandas as pd
-import re
+from sqlalchemy import create_engine
+import gspread
+from google.oauth2.service_account import Credentials
+import os
 
-def transform_data(df):
-    if df.empty:
-        print("Empty Dataframe")
-        return df
+def load_to_csv(df):
+    try:
+        target_dir = "result"
+        
+        if not os.path.exists(target_dir):
+            os.makedirs(target_dir)
+        file_path = os.path.join(target_dir, "products.csv")
+        
+        # 4. Save!
+        df.to_csv(file_path, index=False)
+        print(f"Done : {file_path}")
+        
+    except Exception as e:
+        print(f"Fail: {e}")
+
+
+def load_to_gsheets(df, json_key_path, spreadsheet_name):
 
     try:
+
+        scope = [
+            'https://www.googleapis.com/auth/spreadsheets',
+            'https://www.googleapis.com/auth/drive'
+        ]
+        creds = Credentials.from_service_account_file(json_key_path, scopes=scope)
+        client = gspread.authorize(creds)
+
+        sh = client.open(spreadsheet_name)
+        worksheet = sh.get_worksheet(0) # Ambil sheet pertama
+
+        worksheet.clear()
+
+
+        header = [df.columns.values.tolist()]
+        values = df.values.tolist()
+        data_to_upload = header + values
+
+
+        worksheet.update(data_to_upload)
         
-        # 1. Buang Duplikat dan Data Kosong (Null)
-        df = df.drop_duplicates().dropna()
 
-        # 2. Filter data invalid (Unknown Product & Price Unavailable)
-        df = df[df['title'] != "Unknown Product"]
-        df = df[df['price'] != "Price Unavailable"]
-
-        # 3. Transform PRICE: Hilangkan '$', ubah ke float, kalikan 16.000
-        # Pakai regex r'[^\d.]' untuk buang semua karakter kecuali angka dan titik
-        df['price'] = df['price'].apply(lambda x: float(re.sub(r'[^\d.]', '', str(x))) * 16000)
-
-        # 4. Transform RATING: Ambil angka depan (misal 4.8 / 5 -> 4.8)
-        # Kita filter juga "Invalid Rating" agar tidak error
-        df = df[~df['rating'].str.contains("Invalid", na=False)]
-        df['rating'] = df['rating'].str.extract(r'(\d+\.\d+|\d+)').astype(float)
-
-        # 5. Transform COLORS: Ambil angkanya saja (3 Colors -> 3)
-        df['colors'] = df['colors'].str.extract(r'(\d+)').astype(int)
-
-        # 6. Transform SIZE & GENDER: Hapus prefix teks
-        df['size'] = df['size'].str.replace('Size: ', '', case=False, regex=False)
-        df['gender'] = df['gender'].str.replace('Gender: ', '', case=False, regex=False)
-
-        # Reset index agar rapi setelah ada baris yang dibuang
-        df = df.reset_index(drop=True)
-        
-        print(f"Transformation Done: {len(df)} rows.")
-        return df
-
+    except gspread.exceptions.SpreadsheetNotFound:
+        print(f"Undefined '{spreadsheet_name}' !.")
     except Exception as e:
-        print(f"Error: {e}")
-        return pd.DataFrame()
+        print(f"Failed to load: {e}")
